@@ -417,8 +417,25 @@ def semenu():
 				sleep(1)
 				clear()
 			
+	
+			
+
+	
+#switch menus depending on language
+def menusw():
+	if(lang == "ennlang"):
+		enmenu()
+	elif(lang == "uanlang"):
+		uamenu()
+	elif(lang == "runlang"):
+		rumenu()
+	elif(lang == "senlang"):
+		semenu()		
 			
 			
+
+			
+									
 #get vars from .txt
 def prei():
 	if(lang == "ennlang"):
@@ -462,33 +479,12 @@ if (lang == "nlang"):
 		text_file.close()
 		clear()
 		#exit to menu
-		if(lang == "ennlang"):
-			enmenu()
-		elif(lang == "uanlang"):
-			uamenu()
-		elif(lang == "runlang"):
-			rumenu()
-		elif(lang == "senlang"):
-			semenu()
+		menusw()
 	elif (save == "n"):
 		clear()
 		sleep(1)
 		#also exit to menu
-		if(lang == "ennlang"):
-			enmenu()
-		elif(lang == "uanlang"):
-			uamenu()
-		elif(lang == "runlang"):
-			rumenu()
-		elif(lang == "senlang"):
-			semenu()
+		menusw()
 		
 #if its already saved, exit to menu
-if(lang == "ennlang"):
-	enmenu()
-elif(lang == "uanlang"):
-	uamenu()
-elif(lang == "runlang"):
-	rumenu()
-elif(lang == "senlang"):
-	semenu()
+menusw()
