@@ -50,6 +50,16 @@ def logo():
 ''')
 
 
+def credits():
+	print('''
+
+░█████╗░██████╗░███████╗██████╗░██╗████████╗░██████╗
+██╔══██╗██╔══██╗██╔════╝██╔══██╗██║╚══██╔══╝██╔════╝
+██║░░╚═╝██████╔╝█████╗░░██║░░██║██║░░░██║░░░╚█████╗░
+██║░░██╗██╔══██╗██╔══╝░░██║░░██║██║░░░██║░░░░╚═══██╗
+╚█████╔╝██║░░██║███████╗██████╔╝██║░░░██║░░░██████╔╝
+░╚════╝░╚═╝░░╚═╝╚══════╝╚═════╝░╚═╝░░░╚═╝░░░╚═════╝░
+''')
 
 
 
@@ -59,7 +69,7 @@ def logo():
 def enmenu():
 	while True:
 		logo()
-		print("Menu:\n1 - Start DDOS\n2 - Start preset DDOS\n3 - Options\n4 - Exit.")
+		print("Menu:\n1 - Start DDOS\n2 - Start preset DDOS\n3 - Options\n4 - Credits\n5 - Exit.")
 		menu = input("Option number: ")
 		
 #start dos with info gather
@@ -108,10 +118,10 @@ def enmenu():
 				clear()
 				logo()
 				print("Welcome to preset wizard. This option is used rarely, but can come in handy if you need to execute the attack from a bunch of different devices fast. Please enter your targets information carefully.")
-				filename = input("Preset name (only latin and numbers): ")
+				filename = input("Preset name (only latin letters and numbers): ")
 				print("Your preset will be written to " + filename + ".txt")
 				f = open(filename + ".txt", "x")
-				print(filename + ".txt created.")
+				print(filename + ".txt was created.")
 				
 				#english preset
 				target = input("Target: ")
@@ -124,15 +134,21 @@ def enmenu():
 ''' + threads)
 				f.close()
 				clear()
-
 			elif(option == "3"):
 				clear()
 			else:
 				print("Invalid option.")
 				sleep(1)
 				clear()
-				
+		
 		elif(menu=="4"):
+				clear()
+				credits()
+				print('''\n275,000 transistors since 1985!\n"Man, this shits lightning fast!"\n''')
+				print("Original DDOS code - neuralnine.com\nSwedish UI - u/4lphafallen\n")
+				input("Press Enter to exit to main menu.")
+				clear()	
+		elif(menu=="5"):
 				quit()
 		else:
 				print("Invalid option.")
@@ -150,7 +166,7 @@ def uamenu():
 	while True:
 		clear()
 		logo()
-		print("Меню:\n1 - Запустити DDOS\n2 - Запустити DDOS з шаблону\n3 - Налаштування\n4 - Вихід")
+		print("Меню:\n1 - Запустити DDOS\n2 - Запустити DDOS з шаблону\n3 - Налаштування\n4 - Подяки\n5 - Вихід")
 		menu = input("Номер опції: ")
 		
 #start dos with info gather
@@ -220,11 +236,18 @@ def uamenu():
 			elif(option == "3"):
 				clear()
 			else:
-				print("Invalid option.")
+				print("Неможливий аргумент.")
 				sleep(1)
 				clear()
 				
 		elif(menu=="4"):
+				clear()
+				credits()
+				print('''\n275,000 транзисторів з 1985 року!\n"Чувак, ця хрінь швидка як молнія!"\n''')
+				print("Оригінальній код DDOS - neuralnine.com\nШведська мова - u/4lphafallen\n")
+				input("Натисніть Enter щоб вийти у меню. Слава Україні!")
+				clear()	
+		elif(menu=="5"):
 				quit()
 		else:
 				print("Неможливий аргумент.")
@@ -243,7 +266,7 @@ def rumenu():
 	while True:
 		clear()
 		logo()
-		print("Меню:\n1 - Запустить DDOS\n2 - Запустить DDOS с шаблона\n3 - Настройки\n4 - Выход")
+		print("Меню:\n1 - Запустить DDOS\n2 - Запустить DDOS с шаблона\n3 - Настройки\n4 - Отдельное спасибо\n5 - Выход")
 		menu = input("Номер опции: ")
 		
 #start dos with info gather
@@ -313,11 +336,18 @@ def rumenu():
 			elif(option == "3"):
 				clear()
 			else:
-				print("Invalid option.")
+				print("Невозможный аргумент.")
 				sleep(1)
 				clear()
 				
 		elif(menu=="4"):
+				clear()
+				credits()
+				print('''\n275,000 транзисторов с 1985 года!\n"Чувак, эта херня быстрая как молния!"\n''')
+				print("Оригинальный код DDOS - neuralnine.com\nШведский интерфейс - u/4lphafallen\n")
+				input("Нажмите Enter чтобы выйти в меню. Слава Украине!")
+				clear()	
+		elif(menu=="5"):
 				quit()
 		else:
 				print("Невозможный аргумент.")
@@ -336,7 +366,7 @@ def semenu():
 	while True:
 		clear()
 		logo()
-		print("Meny:\n1 - Starta ddos\n2 - Starta förinställd DDOS\n3 - Alternativ\n4 - Avsluta")
+		print("Meny:\n1 - Starta ddos\n2 - Starta förinställd DDOS\n3 - Alternativ\n4 - Krediter\n5 - Avsluta")
 		menu = input("Förinställning namn: ")
 		
 #start dos with inf gather
@@ -367,16 +397,16 @@ def semenu():
 				text_file = open("config.txt", "w")
 				n = text_file.write("nlang")
 				text_file.close()
-				print("Language reset.")
+				print("Språk återställning.")
 				while True:
-					res = input("Exit now? y/n: ")
+					res = input("Avsluta nu? y/n: ")
 					if(res=="y"):
 						quit()
 					elif(res=="n"):
 						clear()
 						break
 					else:
-						print("Invalid option.")
+						print("Ogiltigt alternativ.")
 						sleep(1)
 						clear()
 						logo()
@@ -385,11 +415,11 @@ def semenu():
 			elif(option == "2"):
 				clear()
 				logo()
-				print("Welcome to preset wizard. This option is used rarely, but can come in handy if you need to execute the attack from a bunch of different devices fast. Please enter your targets information carefully.")
-				filename = input("Preset name (only latin and numbers): ")
-				print("Your preset will be written to " + filename + ".txt")
+				print("Välkommen till förinställningsguiden. Den här inställningen är sällan använd, men kan bli nödvändig om du behöver verkställa attacken från flera olika enheter snabbt. Skriv in målets information väldigt noga.")
+				filename = input("Förinställning namn (endast latinska bokstäver och siffror): ")
+				print("Din förinställning kommer bli skriven till " + filename + ".txt")
 				f = open(filename + ".txt", "x")
-				print(filename + ".txt created.")
+				print(filename + ".txt skapades.")
 				
 				#english preset
 				target = input("Mål: ")
@@ -406,14 +436,21 @@ def semenu():
 			elif(option == "3"):
 				clear()
 			else:
-				print("Invalid option.")
+				print("Ogiltigt alternativ.")
 				sleep(1)
 				clear()
 				
 		elif(menu=="4"):
+				clear()
+				credits()
+				print('''\n275.000 transistorer sedan 1985!\n"Mannen, den här skiten är blixtsnabb!"\n''')
+				print("Originala DDOS koden - neuralnine.com\nSvenska UI - u/4lphafallen\n")
+				input("Tryck Enter för att avsluta till menyn.")
+				clear()	
+		elif(menu=="5"):
 				quit()
 		else:
-				print("Invalid option.")
+				print("Ogiltigt alternativ.")
 				sleep(1)
 				clear()
 			
@@ -461,7 +498,7 @@ lang = (f.read(7))
 #lang change
 if (lang == "nlang"):
 	logo()
-	print("Welcome to i386 ddos, my friend.\n")
+	print("Welcome to i386 ddos, my friend.\n\nWe trust you have received the usual lecture from the local System Administrator. It usually boils down to these three things:\n\n# 1) Respect the privacy of others.\n# 2) Think before you type.\n# 3) With great power comes great responsibility.\n")
 	lang = input("Language/Мова/Язык/Språk \n   en     ua   ru   se\nPlease choose:") + "nlang"
 	if(lang == "ennlang"):
 		save = input("Would you like to save your choice? y/n: ")
