@@ -1,7 +1,9 @@
+from colorama import Fore, Back, Style
 from os import system, name
 from faker import Faker
 from time import sleep
 import linecache
+import colorama
 import threading
 import socket
 
@@ -118,7 +120,7 @@ def logo():
 
 
 def credits():
-	print('''
+	print(Fore.BLUE + Back.WHITE + '''
 IIII"                       .IIII`                     ^IIII
 IIII"                       .IIII`                     ^IIII
 ....                        .IIII`                     ^IIII
@@ -138,6 +140,7 @@ IIII"   "IIII       ;III:    ;IIIII;IIIII;;;;;;;;;IIII;:IIII
                                         .`,;IIII:"'         
 
 ''')
+	print(Style.RESET_ALL)
 
 #idk i cant call this optimization
 def clcredits():
